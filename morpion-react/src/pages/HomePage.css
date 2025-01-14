@@ -1,0 +1,45 @@
+.homepage {
+  text-align: center;
+  padding: 2rem;
+  background-color: #B6CAD3; 
+  color: #203741; 
+}
+
+.homepage-title {
+  font-size: 2.5rem;
+  color: #36CDCA; 
+  margin-bottom: 1rem;
+}
+
+.homepage-description {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.game-button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem; /* Rounded corners */
+  cursor: pointer;
+  color: #fff;
+  background-color: #F6BC47; /* Secondary color */
+  box-shadow: 0 4px #CE8E14; /* Shadow with secondary color */
+  transition: all 0.3s ease;
+}
+
+.game-button:hover {
+  background-color: #CE8E14; /* Darker secondary color on hover */
+  box-shadow: 0 4px #7D9AA7; /* Shadow with medium gray */
+}
+
+.game-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px #7D9AA7; /* Smaller shadow on click */
+}

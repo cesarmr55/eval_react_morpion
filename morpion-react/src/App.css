@@ -1,0 +1,46 @@
+nav {
+  background-color: #203741;
+  color: white;
+  padding: 1rem;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul li a {
+  color: #F6BC47;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  color: #CE8E14;
+}
+
+button {
+  background-color: #36CDCA;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px #284551;
+}
+
+button:hover {
+  background-color: #2EA3A2;
+}
+
+button:active {
+  box-shadow: none;
+  transform: translateY(4px);
+}
+
+footer {
+  background-color: #132C36;
+  color: #B6CAD3;
+  padding: 1rem;
+  text-align: center;
+}
