@@ -4,31 +4,29 @@ import GameBoard from '../components/GameBoard';
 import HeaderGame from '../components/HeaderGame';
 import FooterGame from '../components/FooterGame';
 import Popup from '../components/Popup';
+import RandomBot from '../components/RandomBot'; 
 import './GamePage.css';
 
 function GamePage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  // Récupération des noms et du mode de jeu depuis les paramètres d'URL
   const player1Name = queryParams.get('player1') || 'Player 1';
-  const player2Name = queryParams.get('player2') || 'Player 2'; // Par défaut, "Player 2" (local mode)
-  const mode = queryParams.get('mode') || 'local'; // Mode local ou contre CPU
+  const player2Name = queryParams.get('player2') || 'Player 2';
+  const mode = queryParams.get('mode') || 'local'; 
 
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isXTurn, setIsXTurn] = useState(true);
   const [winner, setWinner] = useState(null);
   const [scores, setScores] = useState({ X: 0, O: 0, ties: 0 });
-  const [streak, setStreak] = useState(0); // Série de victoires du joueur contre le CPU
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-    // Charger les scores depuis le localStorage
     const savedScores = JSON.parse(localStorage.getItem('scores')) || { X: 0, O: 0, ties: 0 };
     setScores(savedScores);
   }, []);
 
   useEffect(() => {
-    // Sauvegarder les scores dans le localStorage
     localStorage.setItem('scores', JSON.stringify(scores));
   }, [scores]);
 
@@ -57,7 +55,7 @@ function GamePage() {
   };
 
   const handleCellClick = (index) => {
-    if (board[index] || winner) return;
+    if (board[index] || winner || (mode === 'cpu' && !isXTurn)) return;
 
     const newBoard = [...board];
     newBoard[index] = isXTurn ? 'X' : 'O';
@@ -67,16 +65,38 @@ function GamePage() {
     const result = checkWinner(newBoard);
     if (result) {
       setWinner(result);
-
       if (result === 'X') {
         setScores((prevScores) => ({ ...prevScores, X: prevScores.X + 1 }));
-        if (mode === 'cpu') setStreak((prevStreak) => prevStreak + 1); // Série de victoires uniquement contre le CPU
+        if (mode === 'cpu') setStreak((prevStreak) => prevStreak + 1);
       } else if (result === 'O') {
         if (mode === 'cpu') {
-          updateLeaderboard(player1Name, streak); // Ajout au leaderboard si le CPU gagne
-          setStreak(0); // Réinitialisation de la série
+          updateLeaderboard(player1Name, streak);
+          setStreak(0);
         }
         setScores((prevScores) => ({ ...prevScores, O: prevScores.O + 1 }));
+      } else if (result === 'tie') {
+        setScores((prevScores) => ({ ...prevScores, ties: prevScores.ties + 1 }));
+      }
+    }
+  };
+
+  const handleBotPlay = (index) => {
+    if (board[index] || winner) return;
+
+    const newBoard = [...board];
+    newBoard[index] = 'O'; // Le bot joue en tant que "O"
+    setBoard(newBoard);
+    setIsXTurn(true);
+
+    const result = checkWinner(newBoard);
+    if (result) {
+      setWinner(result);
+      if (result === 'X') {
+        setScores((prevScores) => ({ ...prevScores, X: prevScores.X + 1 }));
+      } else if (result === 'O') {
+        updateLeaderboard(player1Name, streak);
+        setScores((prevScores) => ({ ...prevScores, O: prevScores.O + 1 }));
+        setStreak(0);
       } else if (result === 'tie') {
         setScores((prevScores) => ({ ...prevScores, ties: prevScores.ties + 1 }));
       }
@@ -100,6 +120,9 @@ function GamePage() {
     <div className="game-container">
       <HeaderGame isXTurn={isXTurn} onReset={resetBoard} />
       <GameBoard board={board} onCellClick={handleCellClick} />
+      {mode === 'cpu' && (
+        <RandomBot board={board} isBotTurn={!isXTurn && !winner} onBotPlay={handleBotPlay} />
+      )}
       {winner && (
         <Popup
           winner={winner === 'tie' ? 'It\'s a tie!' : `${winner === 'X' ? player1Name : player2Name} wins!`}
