@@ -10,14 +10,16 @@ function GamePage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  // Récupération des noms des joueurs depuis les paramètres d'URL
+  // Récupération des noms et du mode de jeu depuis les paramètres d'URL
   const player1Name = queryParams.get('player1') || 'Player 1';
-  const player2Name = queryParams.get('player2') || 'Player 2';
+  const player2Name = queryParams.get('player2') || 'Player 2'; // Par défaut, "Player 2" (local mode)
+  const mode = queryParams.get('mode') || 'local'; // Mode local ou contre CPU
 
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isXTurn, setIsXTurn] = useState(true);
   const [winner, setWinner] = useState(null);
   const [scores, setScores] = useState({ X: 0, O: 0, ties: 0 });
+  const [streak, setStreak] = useState(0); // Série de victoires du joueur contre le CPU
 
   useEffect(() => {
     // Charger les scores depuis le localStorage
@@ -65,12 +67,27 @@ function GamePage() {
     const result = checkWinner(newBoard);
     if (result) {
       setWinner(result);
-      if (result === 'X' || result === 'O') {
-        setScores((prevScores) => ({ ...prevScores, [result]: prevScores[result] + 1 }));
+
+      if (result === 'X') {
+        setScores((prevScores) => ({ ...prevScores, X: prevScores.X + 1 }));
+        if (mode === 'cpu') setStreak((prevStreak) => prevStreak + 1); // Série de victoires uniquement contre le CPU
+      } else if (result === 'O') {
+        if (mode === 'cpu') {
+          updateLeaderboard(player1Name, streak); // Ajout au leaderboard si le CPU gagne
+          setStreak(0); // Réinitialisation de la série
+        }
+        setScores((prevScores) => ({ ...prevScores, O: prevScores.O + 1 }));
       } else if (result === 'tie') {
         setScores((prevScores) => ({ ...prevScores, ties: prevScores.ties + 1 }));
       }
     }
+  };
+
+  const updateLeaderboard = (playerName, wins) => {
+    const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    const updatedLeaderboard = [...savedLeaderboard, { name: playerName, wins }];
+    const sortedLeaderboard = updatedLeaderboard.sort((a, b) => b.wins - a.wins);
+    localStorage.setItem('leaderboard', JSON.stringify(sortedLeaderboard));
   };
 
   const resetBoard = () => {

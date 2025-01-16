@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-
 function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState([]);
 
-  
   useEffect(() => {
+    // Charger les données du leaderboard depuis le localStorage
     const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    // Trier les joueurs par nombre de victoires décroissant
     const sortedLeaderboard = savedLeaderboard.sort((a, b) => b.wins - a.wins);
     setLeaderboard(sortedLeaderboard);
   }, []);
@@ -23,13 +23,19 @@ function LeaderboardPage() {
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map((player, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{player.name}</td>
-              <td>{player.wins}</td>
+          {leaderboard.length === 0 ? (
+            <tr>
+              <td colSpan="3">No records yet. Start playing to enter the leaderboard!</td>
             </tr>
-          ))}
+          ) : (
+            leaderboard.map((player, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{player.name}</td>
+                <td>{player.wins}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
