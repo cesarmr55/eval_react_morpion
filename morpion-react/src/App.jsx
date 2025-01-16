@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import HomePage from './pages/GamePage';
+import HomePage from './pages/HomePage';
 import GamePage from './pages/GamePage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import NavigationBar from './components/NavigationBar';
@@ -11,7 +11,7 @@ function App() {
       <NavigationBar />
       <main>
         <Routes>
-          <Route path='/homepage' element={<HomePage />} />
+          <Route path='/' element={<HomePage />} />
           <Route path='/game' element={<GamePage />} />
           <Route path='/leaderboard' element={<LeaderboardPage />} />
         </Routes>

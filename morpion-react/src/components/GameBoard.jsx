@@ -2,6 +2,7 @@ import GameCell from './GameCell';
 import PropTypes from 'prop-types';
 
 
+
 function GameBoard({ board, onCellClick }) {
   return (
     <div className="game-board">

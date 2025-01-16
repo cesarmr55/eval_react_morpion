@@ -1,13 +1,12 @@
-import CircleSVG from '../assets/circle.svg';
-import CrossSVG from '../assets/cross.svg';
 import PropTypes from 'prop-types';
+
 
 
 function FooterGame({ scores }) {
   return (
     <footer className="game-scoreboard">
       <div className="score x-score">
-        <img src={CrossSVG} alt="Cross" className="score-icon" />
+      <p>X(You)</p>
         <span>{scores.X}</span>
       </div>
       <div className="score ties-score">
@@ -15,7 +14,7 @@ function FooterGame({ scores }) {
         <span>{scores.ties}</span>
       </div>
       <div className="score o-score">
-        <img src={CircleSVG} alt="Circle" className="score-icon" />
+        <p>O(CPU)</p>
         <span>{scores.O}</span>
       </div>
     </footer>
