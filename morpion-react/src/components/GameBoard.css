@@ -1,0 +1,16 @@
+
+.disappearing {
+  animation: disappear 0.5s forwards;
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}

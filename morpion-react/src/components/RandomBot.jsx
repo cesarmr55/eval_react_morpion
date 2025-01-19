@@ -10,23 +10,23 @@ function RandomBot({ board, isBotTurn, onBotPlay }) {
 
       if (availableMoves.length > 0) {
         const randomIndex = availableMoves[Math.floor(Math.random() * availableMoves.length)];
-        
+
         const botDelay = setTimeout(() => {
           onBotPlay(randomIndex);
-        }, 500); 
+        }, 500); // Petite pause pour rendre le bot plus réaliste
 
-        return () => clearTimeout(botDelay); 
+        return () => clearTimeout(botDelay); // Nettoyage pour éviter les effets secondaires
       }
     }
-  }, [isBotTurn, board, onBotPlay]);
+  }, [board, isBotTurn, onBotPlay]);
 
   return null;
 }
 
 RandomBot.propTypes = {
-  board: PropTypes.arrayOf(PropTypes.oneOf([null, 'X', 'O'])).isRequired, 
-  isBotTurn: PropTypes.bool.isRequired, 
-  onBotPlay: PropTypes.func.isRequired, 
+  board: PropTypes.arrayOf(PropTypes.oneOf([null, 'X', 'O'])).isRequired,
+  isBotTurn: PropTypes.bool.isRequired,
+  onBotPlay: PropTypes.func.isRequired,
 };
 
 export default RandomBot;
